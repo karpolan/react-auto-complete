@@ -17,15 +17,14 @@
   margin: 0;
   min-width: 100%;
   box-sizing: border-box;
+  font-size: inherit;
 }
 
 .autocomplete .suggestions {
   padding: 0;
   margin: 0;
-  min-width: 100%;
-  max-width: 100%;
+  width: calc(100% - 2px); /* to be the same as { box-sizing: border-box } */
   max-height: 30vh;
-
   list-style: none;
   position: absolute;
   z-index: 999; /* Todo: Change according  UI library standard */
@@ -38,4 +37,9 @@
 
 .autocomplete .suggestions li {
   padding: 0.2rem 0.3rem;
+}
+
+.autocomplete .suggestions li:hover {
+  background-color: aqua;
+  cursor: pointer;
 }
