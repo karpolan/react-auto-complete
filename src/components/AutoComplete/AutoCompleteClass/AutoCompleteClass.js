@@ -34,6 +34,7 @@ class AutoCompleteClass extends Component {
   handleOnChange = (event) => {
     const { value } = this.state;
     const newValue = event.currentTarget.value;
+
     if (newValue === value) {
       return; // Nothing was changed...
     }
@@ -92,7 +93,7 @@ class AutoCompleteClass extends Component {
    * Renders a component composition depending on current user input
    */
   render() {
-    console.log('AutoCompleteClass.render()');
+    // console.log('AutoCompleteClass.render()');
     const { value, showSuggestions } = this.state;
     return (
       <>
@@ -111,6 +112,7 @@ AutoCompleteClass.propTypes = {
 
 AutoCompleteClass.defaultProps = {
   value: '',
+  suggestions: [],
   suggestions: ['apple', 'banana', 'coconut', 'banana'], // Remove in release!!!
 };
 
