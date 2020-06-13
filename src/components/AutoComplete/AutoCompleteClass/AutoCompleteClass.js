@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 /**
  * Renders the text Input with autocomplete suggestions List
- * @class AutoCompleteClass
+ * @param {array} suggestions - list of autocomplete suggestions as strings
  * @author Anton Karpenko
  */
 class AutoCompleteClass extends Component {
@@ -28,8 +28,20 @@ class AutoCompleteClass extends Component {
     });
   };
 
+  filterSuggestion = (item, index, all) => {
+    return index !== 1;
+  };
+
   renderSuggestions() {
-    return <div>Suggestions list here...</div>;
+    const { suggestions } = this.props;
+    const itemsToRender = suggestions.filter(this.filterSuggestion);
+    return (
+      <ul>
+        {itemsToRender.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    );
   }
 
   render() {
@@ -44,7 +56,11 @@ class AutoCompleteClass extends Component {
 }
 
 AutoCompleteClass.propTypes = {
-  prop: PropTypes,
+  suggestions: PropTypes.arrayOf(PropTypes.string),
+};
+
+AutoCompleteClass.defaultProps = {
+  suggestions: ['apple', 'banana', 'coconut'], // Remove in release!!!
 };
 
 export default AutoCompleteClass;
