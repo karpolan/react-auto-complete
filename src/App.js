@@ -1,24 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import { AutoCompleteClass, AutoCompleteFunc } from './components/AutoComplete';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>AutoComplete Component for ReactJS</h1>
       </header>
+      <main>
+        <h2>AutoCompleteClass</h2>
+        <AutoCompleteClass />
+        <h2>AutoCompleteFunc</h2>
+        <AutoCompleteFunc />
+      </main>
+      <footer>
+        Copyright &copy;{' '}
+        <a target="_blank" rel="noopener noreferrer" href="https://karpolan.com">
+          KARPOLAN
+        </a>
+      </footer>
     </div>
   );
 }
