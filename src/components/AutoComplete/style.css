@@ -12,6 +12,10 @@
   background-color: aqua;
 }
 
+.autocomplete .selected {
+  background-color: #f0f;
+}
+
 .autocomplete .value {
   padding: 0.2rem 0.3rem;
   margin: 0;

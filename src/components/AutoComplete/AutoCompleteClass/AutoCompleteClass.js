@@ -15,6 +15,7 @@ class AutoCompleteClass extends Component {
     this.state = {
       value: props.value, // User input
       showSuggestions: false, // the Suggestions list is rendered when true
+      selectedIndex: -1, // Index of currently selected Suggestions in the DropDown list
     };
   }
 
@@ -43,6 +44,53 @@ class AutoCompleteClass extends Component {
       },
       () => this.doOnChange() // Call the Event after the State was changed
     );
+  };
+
+  // Tracks Enter, Space and Arrow keys
+  handleKeyDown = (event) => {
+    const { suggestions } = this.props;
+    const { showSuggestions, selectedIndex } = this.state;
+    let newSelectedIndex = selectedIndex;
+
+    // console.log('handleKeyDown() - event.keyCode:', event.keyCode);
+
+    if (suggestions.length < 1) {
+      return; // There is no DropDown list
+    }
+
+    switch (event.keyCode) {
+      // case 32:
+      case 13:
+        // Apply currently selected Item and close the DropDown list
+        console.log('case "Apply');
+        if (selectedIndex < 0 || selectedIndex >= {}.length) {
+          return; // There is no selected Item
+        }
+        this.setState({ value: suggestions[selectedIndex], selectedIndex: -1, showSuggestions: false });
+        return; // Thats all for now
+
+      case 38:
+        // Select Prev
+        if (!showSuggestions) {
+          this.setState({ showSuggestions: true });
+          return;
+        }
+        newSelectedIndex = Math.max(selectedIndex - 1, 0);
+        console.log('case "Prev"', newSelectedIndex);
+        break;
+
+      case 40:
+        // Select Next
+        if (!showSuggestions) {
+          this.setState({ showSuggestions: true });
+          return;
+        }
+        newSelectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+        console.log('case "Next"', newSelectedIndex);
+        break;
+    }
+
+    this.setState({ selectedIndex: newSelectedIndex, showSuggestions: true });
   };
 
   // Called when the user clicks some of Suggestions in the DropDown list
@@ -78,7 +126,7 @@ class AutoCompleteClass extends Component {
   // Renders a list of currently matched suggestions
   renderSuggestions() {
     const { suggestions } = this.props;
-    const { value, showSuggestions } = this.state;
+    const { value, showSuggestions, selectedIndex } = this.state;
 
     if (!showSuggestions || !Boolean(value) || suggestions.length < 1) {
       return null; // Nothing to render
@@ -94,6 +142,7 @@ class AutoCompleteClass extends Component {
         {itemsToRender.map((item, index) => (
           <li
             key={`item-${item}-${index}`}
+            className={index === selectedIndex ? 'selected' : ''}
             dangerouslySetInnerHTML={{ __html: this.renderHighlightedText(item, value) }}
             onClick={this.handleOnItemClick}
           />
@@ -110,7 +159,7 @@ class AutoCompleteClass extends Component {
     const { value } = this.state;
     return (
       <div class="autocomplete">
-        <input class="value" type="text" value={value} onChange={this.handleOnChange} />
+        <input class="value" type="text" value={value} onChange={this.handleOnChange} onKeyDown={this.handleKeyDown} />
         {this.renderSuggestions()}
       </div>
     );
