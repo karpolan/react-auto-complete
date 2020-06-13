@@ -14,12 +14,11 @@ class AutoCompleteClass extends Component {
     super(props);
     this.state = {
       value: props.value, // User input
+      showSuggestions: false, // the Suggestions list is rendered when true
     };
   }
 
-  /**
-   * Calls props.onChange() if set
-   */
+  // Calls props.onChange() if set
   doOnChange() {
     const { onChange } = this.props;
     const { value } = this.state;
@@ -28,9 +27,7 @@ class AutoCompleteClass extends Component {
     }
   }
 
-  /**
-   * Called on every key/char the user enters
-   */
+  // Called on every key/char the user enters
   handleOnChange = (event) => {
     const { value } = this.state;
     const newValue = event.currentTarget.value;
@@ -42,23 +39,32 @@ class AutoCompleteClass extends Component {
     this.setState(
       {
         value: newValue,
+        showSuggestions: true, // Something new were typed, so show DropDown again
       },
       () => this.doOnChange() // Call the Event after the State was changed
     );
   };
 
-  /**
-   * Filters suggestions according to current user input
-   */
+  // Called when the user clicks some of Suggestions in the DropDown list
+  handleOnItemClick = (event) => {
+    const { value } = this.state;
+    const newValue = event.currentTarget.innerText;
+
+    if (newValue === value) {
+      return; // Nothing was changed...
+    }
+
+    this.setState({ value: newValue, showSuggestions: false });
+  };
+
+  // Filters suggestions according to current user input
   filterSuggestion = (item, index, all) => {
     const { value } = this.state;
     const itemContainsValue = item.toLowerCase().includes(value.toLowerCase());
     return itemContainsValue;
   };
 
-  /**
-   * Renders given Text but replaces subSting with <span class="highlight">subSting</span>
-   */
+  // Renders given Text but replaces subSting with <span class="highlight">subSting</span>
   renderHighlightedText(text, subSting) {
     // Todo: Move to utils or use optimized function from some popular library
     function replaceAll(str, find, replace) {
@@ -69,14 +75,12 @@ class AutoCompleteClass extends Component {
     return replaceAll(text, subSting, replaceWith);
   }
 
-  /**
-   * Renders a list of currently matched suggestions
-   */
+  // Renders a list of currently matched suggestions
   renderSuggestions() {
     const { suggestions } = this.props;
-    const { value } = this.state;
+    const { value, showSuggestions } = this.state;
 
-    if (!Boolean(value) || suggestions.length < 1) {
+    if (!showSuggestions || !Boolean(value) || suggestions.length < 1) {
       return null; // Nothing to render
     }
 
@@ -91,6 +95,7 @@ class AutoCompleteClass extends Component {
           <li
             key={`item-${item}-${index}`}
             dangerouslySetInnerHTML={{ __html: this.renderHighlightedText(item, value) }}
+            onClick={this.handleOnItemClick}
           />
         ))}
       </ul>
