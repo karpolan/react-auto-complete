@@ -15,6 +15,9 @@ class AutoCompleteClass extends Component {
     };
   }
 
+  /**
+   * Called on every key/char the user enters
+   */
   onChange = (event) => {
     const { value } = this.state;
     const newValue = event.currentTarget.value;
@@ -28,22 +31,50 @@ class AutoCompleteClass extends Component {
     });
   };
 
+  /**
+   * Filters suggestions according to current user input
+   */
   filterSuggestion = (item, index, all) => {
-    return index !== 1;
+    const { value } = this.state;
+    const itemContainsValue = item.toLowerCase().includes(value.toLowerCase());
+    return itemContainsValue;
   };
 
+  /**
+   * Renders given Text but replaces subSting with <span class="highlight">subSting</span>
+   */
+  renderHighlightedText(text, subSting) {
+    // Todo: Move to utils or use optimized function from some popular library
+    function replaceAll(str, find, replace) {
+      return str.replace(new RegExp(find, 'g'), replace);
+    }
+
+    const replaceWith = `<span class="highlight">${subSting}</span>`;
+    return replaceAll(text, subSting, replaceWith);
+  }
+
+  /**
+   * Renders a list of currently matched suggestions
+   */
   renderSuggestions() {
     const { suggestions } = this.props;
+    const { value } = this.state;
     const itemsToRender = suggestions.filter(this.filterSuggestion);
     return (
       <ul>
-        {itemsToRender.map((item) => (
-          <li>{item}</li>
+        {itemsToRender.map((item, index) => (
+          <li
+            key={`item-${item}-${index}`}
+            dangerouslySetInnerHTML={{ __html: this.renderHighlightedText(item, value) }}
+          />
         ))}
       </ul>
     );
   }
 
+  /**
+   * Renders a component composition depending on current user input
+   */
   render() {
     const { value, showSuggestions } = this.state;
     return (
@@ -60,7 +91,7 @@ AutoCompleteClass.propTypes = {
 };
 
 AutoCompleteClass.defaultProps = {
-  suggestions: ['apple', 'banana', 'coconut'], // Remove in release!!!
+  suggestions: ['apple', 'banana', 'coconut', 'banana'], // Remove in release!!!
 };
 
 export default AutoCompleteClass;
