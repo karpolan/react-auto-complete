@@ -1,0 +1,41 @@
+.autocomplete {
+  /* border: 1px dotted #f0f; */
+  padding: 0;
+  margin: 0;
+  min-width: 240px;
+  position: relative;
+  display: inline-block;
+  text-align: left;
+}
+
+.autocomplete .highlight {
+  background-color: aqua;
+}
+
+.autocomplete .value {
+  padding: 0.2rem 0.3rem;
+  margin: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.autocomplete .suggestions {
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+  max-width: 100%;
+  max-height: 30vh;
+
+  list-style: none;
+  position: absolute;
+  z-index: 999; /* Todo: Change according  UI library standard */
+  overflow-y: auto;
+
+  background: #eee;
+  border: 1px solid #888;
+  border-top: 0;
+}
+
+.autocomplete .suggestions li {
+  padding: 0.2rem 0.3rem;
+}

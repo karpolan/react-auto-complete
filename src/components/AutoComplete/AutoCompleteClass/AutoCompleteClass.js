@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import '../style.css';
 
 /**
  * Renders the text Input with autocomplete suggestions List
@@ -13,7 +14,6 @@ class AutoCompleteClass extends Component {
     super(props);
     this.state = {
       value: props.value, // User input
-      showSuggestions: false, // the Suggestions list is rendered when true
     };
   }
 
@@ -42,7 +42,6 @@ class AutoCompleteClass extends Component {
     this.setState(
       {
         value: newValue,
-        showSuggestions: Boolean(newValue), // When non-empty
       },
       () => this.doOnChange() // Call the Event after the State was changed
     );
@@ -76,9 +75,18 @@ class AutoCompleteClass extends Component {
   renderSuggestions() {
     const { suggestions } = this.props;
     const { value } = this.state;
+
+    if (!Boolean(value) || suggestions.length < 1) {
+      return null; // Nothing to render
+    }
+
     const itemsToRender = suggestions.filter(this.filterSuggestion);
+    if (itemsToRender.length < 1) {
+      return null; // No items to render
+    }
+
     return (
-      <ul>
+      <ul class="suggestions">
         {itemsToRender.map((item, index) => (
           <li
             key={`item-${item}-${index}`}
@@ -94,12 +102,12 @@ class AutoCompleteClass extends Component {
    */
   render() {
     // console.log('AutoCompleteClass.render()');
-    const { value, showSuggestions } = this.state;
+    const { value } = this.state;
     return (
-      <>
-        <input type="text" value={value} onChange={this.handleOnChange} />
-        {showSuggestions && this.renderSuggestions()}
-      </>
+      <div class="autocomplete">
+        <input class="value" type="text" value={value} onChange={this.handleOnChange} />
+        {this.renderSuggestions()}
+      </div>
     );
   }
 }
