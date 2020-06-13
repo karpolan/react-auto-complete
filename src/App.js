@@ -2,15 +2,10 @@ import React from 'react';
 import './App.css';
 
 import { AutoCompleteClass, AutoCompleteFunc } from './components/AutoComplete';
-import { getSuggestions } from './api';
+
+import AutoCompleteWithDataFetch from './components/AutoCompleteWithDataFetch/AutoCompleteWithDataFetch';
 
 function App() {
-  const getData = async () => {
-    const result = await getSuggestions();
-    // console.log('getData() - result:', result);
-    return result;
-  };
-
   return (
     <div className="app">
       <header className="App-header">
@@ -21,7 +16,9 @@ function App() {
         <AutoCompleteClass />
         <h2>AutoCompleteFunc</h2>
         <AutoCompleteFunc />
-        {JSON.stringify(getData())}
+
+        <h2>AutoCompleteWithDataFetch</h2>
+        <AutoCompleteWithDataFetch debounceInterval={500} />
       </main>
       <footer>
         Copyright &copy;{' '}

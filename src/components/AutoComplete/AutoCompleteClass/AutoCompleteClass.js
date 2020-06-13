@@ -3,32 +3,48 @@ import PropTypes from 'prop-types';
 
 /**
  * Renders the text Input with autocomplete suggestions List
- * @param {array} suggestions - list of autocomplete suggestions as strings
+ * @param {string} props.value - input value as strings
+ * @param {array} props.suggestions - list of autocomplete suggestions as strings
+ * @param {func} props.onChange - event callback, called as onChange(value:) on every key/char input
  * @author Anton Karpenko
  */
 class AutoCompleteClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '', // User input
+      value: props.value, // User input
       showSuggestions: false, // the Suggestions list is rendered when true
     };
   }
 
   /**
+   * Calls props.onChange() if set
+   */
+  doOnChange() {
+    const { onChange } = this.props;
+    const { value } = this.state;
+    if (onChange && typeof onChange === 'function') {
+      onChange(value);
+    }
+  }
+
+  /**
    * Called on every key/char the user enters
    */
-  onChange = (event) => {
+  handleOnChange = (event) => {
     const { value } = this.state;
     const newValue = event.currentTarget.value;
     if (newValue === value) {
       return; // Nothing was changed...
     }
 
-    this.setState({
-      value: newValue,
-      showSuggestions: Boolean(newValue), // true when non-empty
-    });
+    this.setState(
+      {
+        value: newValue,
+        showSuggestions: Boolean(newValue), // When non-empty
+      },
+      () => this.doOnChange() // Call the Event after the State was changed
+    );
   };
 
   /**
@@ -76,10 +92,11 @@ class AutoCompleteClass extends Component {
    * Renders a component composition depending on current user input
    */
   render() {
+    console.log('AutoCompleteClass.render()');
     const { value, showSuggestions } = this.state;
     return (
       <>
-        <input type="text" value={value} onChange={this.onChange} />
+        <input type="text" value={value} onChange={this.handleOnChange} />
         {showSuggestions && this.renderSuggestions()}
       </>
     );
@@ -87,10 +104,13 @@ class AutoCompleteClass extends Component {
 }
 
 AutoCompleteClass.propTypes = {
+  value: PropTypes.string,
   suggestions: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func,
 };
 
 AutoCompleteClass.defaultProps = {
+  value: '',
   suggestions: ['apple', 'banana', 'coconut', 'banana'], // Remove in release!!!
 };
 
