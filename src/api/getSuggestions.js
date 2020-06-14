@@ -13,7 +13,7 @@ async function apiFind(query) {
 /**
  * Returns a list of "suggestions" as strings for given text value form the API
  */
-export async function getSuggestions(forValue) {
+export async function getSuggestions(forValue = '') {
   console.time('getSuggestions()');
   let result;
   try {

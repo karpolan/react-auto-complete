@@ -14,8 +14,8 @@ function replaceAll(str, find, replace) {
 }
 
 /**
- * Renders the text Input with autocomplete suggestions List
- * @param {string} props.value - input value as strings
+ * Renders the text Input with autocomplete suggestions in the DropDown List
+ * @param {string} props.value - input value as string
  * @param {array} props.suggestions - list of autocomplete suggestions as strings
  * @param {func} props.onChange - event callback, called as onChange(value:) on every key/char input
  * @author Anton Karpenko
@@ -24,9 +24,9 @@ class AutoCompleteClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value, // Current user input
+      value: props.value, // Current input value
       matchedSuggestions: [], // Filtered props.suggestions according to current input value
-      showSuggestions: false, // the Suggestions list is rendered when true
+      showDropDown: false, // the DropDown list with matchedSuggestions is rendered when true
       selectedIndex: -1, // Index of currently selected Suggestions in the DropDown list
     };
   }
@@ -81,7 +81,7 @@ class AutoCompleteClass extends Component {
     this.setState(
       {
         value: newValue,
-        showSuggestions: true, // Something new were typed, so show DropDown list again
+        showDropDown: true, // Something new were typed, so show DropDown list again
       },
       () => this.doOnChange() // Call the Event after the State was changed
     );
@@ -89,34 +89,39 @@ class AutoCompleteClass extends Component {
 
   // Tracks Esc, Enter, Tab, Space and Arrow keys
   handleKeyDown = (event) => {
-    // console.log('handleKeyDown() - event.keyCode:', event.keyCode);
-    const { matchedSuggestions, showSuggestions, selectedIndex } = this.state;
+    const { matchedSuggestions, showDropDown: showDropDown, selectedIndex } = this.state;
     let newSelectedIndex = selectedIndex;
-
-    // if (matchedSuggestions.length < 1) {
-    //   return; // There is no items for DropDown list
-    // }
 
     switch (event.keyCode) {
       case 27: // Esc pressed
         // Close the DropDown list
-        this.setState({ showSuggestions: false, selectedIndex: -1 });
-        return;
+        this.setState({ showDropDown: false, selectedIndex: -1 });
+        return; // Thats all for now
+
+      case 13: // Enter pressed
+        if (!showDropDown) {
+          // Just open DropDown on first press
+          this.setState({ showDropDown: true });
+          return;
+        }
+      // No break here!!!
 
       case 9: // Tab pressed
       case 32: // Space pressed
-      case 13: // Enter pressed
         if (selectedIndex >= 0 && selectedIndex < matchedSuggestions.length) {
-          // Apply currently selected Item, close the DropDown list, stop event propagation.
+          // Apply currently selected Item, close the DropDown list, stop event propagation, call OnChange event
           event.preventDefault();
-          this.setState({ value: matchedSuggestions[selectedIndex], selectedIndex: -1, showSuggestions: false });
+          this.setState(
+            { value: matchedSuggestions[selectedIndex], selectedIndex: -1, showDropDown: false },
+            () => this.doOnChange() // Call the Event after the State was changed
+          );
         }
         return; // Thats all for now
 
       case 38: // ArrowUp pressed
-        if (!showSuggestions) {
+        if (!showDropDown) {
           // Just open DropDown on first press
-          this.setState({ showSuggestions: true });
+          this.setState({ showDropDown: true });
           return;
         }
 
@@ -125,9 +130,9 @@ class AutoCompleteClass extends Component {
         break;
 
       case 40: // ArrowDown pressed
-        if (!showSuggestions) {
+        if (!showDropDown) {
           // Just open DropDown on first press
-          this.setState({ showSuggestions: true });
+          this.setState({ showDropDown: true });
           return;
         }
 
@@ -137,7 +142,7 @@ class AutoCompleteClass extends Component {
     }
 
     // Set new selectedIndex and make sure the DropDown is shown
-    this.setState({ selectedIndex: newSelectedIndex, showSuggestions: true });
+    this.setState({ selectedIndex: newSelectedIndex, showDropDown: true });
   };
 
   // Called when the User clicks some Item in DropDown list
@@ -150,20 +155,21 @@ class AutoCompleteClass extends Component {
     }
 
     // Set new value and hide the DropDown list
-    this.setState({ value: newValue, showSuggestions: false });
+    this.setState({ value: newValue, showDropDown: false });
   };
 
-  // Renders given Text but replaces subSting with <span class="highlight">subSting</span>
+  // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
   renderHighlightedText(text, subSting) {
     const replaceWith = `<span class="highlight">${subSting}</span>`;
-    return replaceAll(text, subSting, replaceWith);
+    const result = replaceAll(text, subSting, replaceWith);
+    return result;
   }
 
   // Renders a list of currently matched suggestions
   renderSuggestions() {
-    const { value, matchedSuggestions, showSuggestions, selectedIndex } = this.state;
+    const { value, matchedSuggestions, showDropDown: showDropDown, selectedIndex } = this.state;
 
-    if (!showSuggestions || matchedSuggestions.length < 1) {
+    if (!showDropDown || matchedSuggestions.length < 1) {
       return null; // Nothing to render
     }
 
@@ -181,11 +187,7 @@ class AutoCompleteClass extends Component {
     );
   }
 
-  /**
-   * Renders a component composition depending on current user input
-   */
   render() {
-    // console.log('AutoCompleteClass.render()');
     const { value } = this.state;
     return (
       <div className="autocomplete">

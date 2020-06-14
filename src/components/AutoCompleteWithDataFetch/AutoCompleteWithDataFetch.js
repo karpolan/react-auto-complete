@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getSuggestions } from '../../api';
 import AutoComplete from '../AutoComplete';
@@ -28,6 +28,10 @@ const AutoCompleteWithDataFetch = (props) => {
     debounceInterval = 250, // Quarter of second by default
   } = props;
   const [suggestions, setSuggestions] = useState([]); // Empty array by default
+
+  useEffect(() => {
+    fetchData(); // Fetch default data once
+  }, []);
 
   // Calls fetchData() no frequently than debounceInterval timeout
   const debouncedHandler = useCallback(
