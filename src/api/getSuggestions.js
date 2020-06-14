@@ -14,7 +14,7 @@ async function apiFind(query) {
  * Returns a list of "suggestions" as strings for given text value form the API
  */
 export async function getSuggestions(forValue = '') {
-  console.time('getSuggestions()');
+  console.time(`getSuggestions(${forValue})`);
   let result;
   try {
     const fetchedData = await apiFind({ title: forValue });
@@ -26,8 +26,8 @@ export async function getSuggestions(forValue = '') {
     console.log(`getSuggestions(${forValue}) - successful, result:`, result);
     return result;
   } catch (error) {
-    console.error('getSuggestions() - ', error);
+    console.error(`getSuggestions(${forValue}) - `, error);
   } finally {
-    console.timeEnd('getSuggestions()', 'ended');
+    console.timeEnd(`getSuggestions(${forValue})`);
   }
 }

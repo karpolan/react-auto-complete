@@ -11,6 +11,7 @@ import { debounce } from './utils';
 const AutoCompleteDataController = (props) => {
   const {
     debounceInterval = 250, // Quarter of second by default
+    value = '',
   } = props;
   const [suggestions, setSuggestions] = useState([]); // Empty array by default
 
@@ -35,10 +36,11 @@ const AutoCompleteDataController = (props) => {
     debouncedHandler(newValue);
   };
 
-  return <AutoComplete suggestions={suggestions} onChange={handleOnChange} />;
+  return <AutoComplete value={value} suggestions={suggestions} onChange={handleOnChange} />;
 };
 
 AutoCompleteDataController.propTypes = {
+  value: PropTypes.string,
   debounceInterval: PropTypes.number,
 };
 

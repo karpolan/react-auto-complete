@@ -139,14 +139,15 @@ class AutoCompleteClass extends Component {
     if (newValue === value) {
       return; // Nothing was changed...
     }
-
     // Set new value and hide the DropDown list
     this.setState({ value: newValue, showList: false });
   };
 
   // Hide the DropDown list when the input field loosing focus
   handleOnBlur = (event) => {
-    this.setState({ showList: false });
+    setTimeout(() => {
+      this.setState({ showList: false });
+    }, 250);
   };
 
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>

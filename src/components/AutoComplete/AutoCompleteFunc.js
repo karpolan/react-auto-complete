@@ -123,7 +123,9 @@ const AutoCompleteFunc = (props) => {
 
   // Hide the DropDown list when the input field loosing focus
   const handleOnBlur = (event) => {
-    setShowList(false);
+    setTimeout(() => {
+      setShowList(false);
+    }, 250);
   };
 
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
