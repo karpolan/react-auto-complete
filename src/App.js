@@ -13,7 +13,7 @@ function App() {
       </header>
       <main>
         <h2>AutoCompleteClass</h2>
-        <AutoCompleteClass />
+        <AutoCompleteClass suggestions={['apple', 'banana', 'coconut', 'banana']} />
         <h2>AutoCompleteFunc</h2>
         <AutoCompleteFunc />
 
