@@ -1,9 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import { AutoCompleteClass, AutoCompleteFunc } from './components/AutoComplete';
-
-import AutoCompleteWithDataFetch from './components/AutoCompleteWithDataFetch/AutoCompleteWithDataFetch';
+import { AutoCompleteClass, AutoCompleteFunc, AutoCompleteDataController } from './components/AutoComplete';
 
 function App() {
   return (
@@ -16,9 +14,10 @@ function App() {
         <AutoCompleteClass suggestions={['apple', 'banana', 'coconut', 'banana']} />
         <h2>AutoCompleteFunc</h2>
         <AutoCompleteFunc suggestions={['apple', 'banana', 'coconut', 'banana']} />
-
-        <h2>AutoCompleteWithDataFetch</h2>
-        <AutoCompleteWithDataFetch debounceInterval={500} />
+        {/* <h2>AutoComplete</h2>
+        <AutoCompleteFunc suggestions={['apple', 'banana', 'coconut', 'banana']} /> */}
+        <h2>AutoCompleteDataController</h2>
+        <AutoCompleteDataController debounceInterval={500} />
       </main>
       <footer>
         Copyright &copy;{' '}

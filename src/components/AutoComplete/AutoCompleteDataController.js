@@ -1,29 +1,14 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getSuggestions } from '../../api';
-import AutoComplete from '../AutoComplete';
-
-// Todo: Use lodash or other library with full featured "debounce" function
-function debounce(fn, time) {
-  let timeoutId;
-  return wrapper;
-
-  function wrapper(...args) {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      timeoutId = null;
-      fn(...args);
-    }, time);
-  }
-}
+import AutoComplete from '.';
+import { debounce } from './utils';
 
 /**
  * Wrapper for AutoComplete component to fetch Suggestions via API when the Value is changed
- * @param {number} props.debounceInterval - interval for "debounce" timeout
+ * @param {number} props.debounceInterval - interval for "debounce" feature
  */
-const AutoCompleteWithDataFetch = (props) => {
+const AutoCompleteDataController = (props) => {
   const {
     debounceInterval = 250, // Quarter of second by default
   } = props;
@@ -45,7 +30,7 @@ const AutoCompleteWithDataFetch = (props) => {
     setSuggestions(newSuggestions);
   };
 
-  // Comes from wrapped AutoComplete component on every key/char press
+  // Comes from wrapped AutoComplete component on every char press
   const handleOnChange = (newValue) => {
     debouncedHandler(newValue);
   };
@@ -53,8 +38,8 @@ const AutoCompleteWithDataFetch = (props) => {
   return <AutoComplete suggestions={suggestions} onChange={handleOnChange} />;
 };
 
-AutoCompleteWithDataFetch.propTypes = {
+AutoCompleteDataController.propTypes = {
   debounceInterval: PropTypes.number,
 };
 
-export default AutoCompleteWithDataFetch;
+export default AutoCompleteDataController;

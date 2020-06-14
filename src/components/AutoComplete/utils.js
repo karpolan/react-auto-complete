@@ -8,3 +8,19 @@ export function replaceAll(str, find, replace) {
   }
   return result;
 }
+
+// Todo: Use lodash or other library with full featured "debounce" function
+export function debounce(fn, time) {
+  let timeoutId;
+  return wrapper;
+
+  function wrapper(...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      fn(...args);
+    }, time);
+  }
+}

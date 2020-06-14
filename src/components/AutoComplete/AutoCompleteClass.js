@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { replaceAll } from '../utils';
-import '../style.css';
+import { replaceAll } from './utils';
+import './style.css';
 
 /**
  * Renders the text Input with autocomplete suggestions in the DropDown List
@@ -15,8 +15,8 @@ class AutoCompleteClass extends Component {
     super(props);
     this.state = {
       value: props.value, // Current input value
-      matchedSuggestions: [], // Filtered props.suggestions according to current input value
-      showDropDown: false, // the DropDown list with matchedSuggestions is rendered when true
+      matched: [], // Filtered props.suggestions according to current input value
+      showList: false, // the DropDown list with matched is rendered when true
       selectedIndex: -1, // Index of currently selected Suggestion in the DropDown list
     };
   }
@@ -31,25 +31,20 @@ class AutoCompleteClass extends Component {
       this.updateSuggestions();
     }
   }
-
-  // Filters Suggestions according to current input value
-  filterSuggestion = (item = '', index, all) => {
-    const { value } = this.state;
-    if (!value) {
-      return true; // When value is empty all Suggestions match
-    }
-    const itemContainsValue = item.toLowerCase().includes(value.toLowerCase());
-    return itemContainsValue;
-  };
-
-  // Updates matchedSuggestions and resets DropDown selection
+  // Updates matched and resets DropDown selection
   updateSuggestions() {
     const { suggestions } = this.props;
-    const matchedSuggestions = suggestions.filter(this.filterSuggestion);
-    this.setState({ matchedSuggestions, selectedIndex: -1 });
+    const { value } = this.state;
+    let newMatched;
+    if (!value) {
+      newMatched = [...suggestions];
+    } else {
+      newMatched = suggestions.filter((item) => item.toLowerCase().includes(value.toLowerCase()));
+    }
+    this.setState({ matched: newMatched, selectedIndex: -1 });
   }
 
-  // Calls props.onChange() if set, also updates matchedSuggestions
+  // Calls props.onChange() if set, also updates matched
   doOnChange() {
     const { onChange } = this.props;
     const { value } = this.state;
@@ -72,7 +67,7 @@ class AutoCompleteClass extends Component {
     this.setState(
       {
         value: newValue,
-        showDropDown: true, // Something new were typed, so show DropDown list again
+        showList: true, // Something new were typed, so show DropDown list again
       },
       () => this.doOnChange() // Call the Event after the State was changed
     );
@@ -80,39 +75,39 @@ class AutoCompleteClass extends Component {
 
   // Tracks Esc, Enter, Tab, Space and Arrow keys
   handleKeyDown = (event) => {
-    const { matchedSuggestions, showDropDown, selectedIndex } = this.state;
+    const { matched, showList, selectedIndex } = this.state;
     let newSelectedIndex = selectedIndex;
 
     switch (event.keyCode) {
       case 27: // Esc pressed
         // Close the DropDown list
-        this.setState({ showDropDown: false, selectedIndex: -1 });
+        this.setState({ showList: false, selectedIndex: -1 });
         return; // Thats all for now
 
       case 13: // Enter pressed
-        if (!showDropDown) {
+        if (!showList) {
           // Just open DropDown on first press
-          this.setState({ showDropDown: true });
+          this.setState({ showList: true });
           return;
         }
       // Note: No break here!!!
 
       case 9: // Tab pressed
       case 32: // Space pressed
-        if (selectedIndex >= 0 && selectedIndex < matchedSuggestions.length) {
+        if (selectedIndex >= 0 && selectedIndex < matched.length) {
           // Apply currently selected Item, close the DropDown list, stop event propagation, call OnChange event
           event.preventDefault();
           this.setState(
-            { value: matchedSuggestions[selectedIndex], selectedIndex: -1, showDropDown: false },
+            { value: matched[selectedIndex], selectedIndex: -1, showList: false },
             () => this.doOnChange() // Call the Event after the State was changed
           );
         }
         return; // Thats all for now
 
       case 38: // ArrowUp pressed
-        if (!showDropDown) {
+        if (!showList) {
           // Just open DropDown on first press
-          this.setState({ showDropDown: true });
+          this.setState({ showList: true });
           return;
         }
 
@@ -121,19 +116,19 @@ class AutoCompleteClass extends Component {
         break;
 
       case 40: // ArrowDown pressed
-        if (!showDropDown) {
+        if (!showList) {
           // Just open DropDown on first press
-          this.setState({ showDropDown: true });
+          this.setState({ showList: true });
           return;
         }
 
         // Select Next
-        newSelectedIndex = Math.min(selectedIndex + 1, matchedSuggestions.length - 1);
+        newSelectedIndex = Math.min(selectedIndex + 1, matched.length - 1);
         break;
     }
 
     // Set new selectedIndex and make sure the DropDown is shown
-    this.setState({ selectedIndex: newSelectedIndex, showDropDown: true });
+    this.setState({ selectedIndex: newSelectedIndex, showList: true });
   };
 
   // Called when the User clicks some Item in DropDown list
@@ -146,7 +141,7 @@ class AutoCompleteClass extends Component {
     }
 
     // Set new value and hide the DropDown list
-    this.setState({ value: newValue, showDropDown: false });
+    this.setState({ value: newValue, showList: false });
   };
 
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
@@ -158,15 +153,15 @@ class AutoCompleteClass extends Component {
 
   // Renders a list of currently matched Suggestions
   renderSuggestions() {
-    const { value, matchedSuggestions, showDropDown, selectedIndex } = this.state;
+    const { value, matched, showList, selectedIndex } = this.state;
 
-    if (!showDropDown || matchedSuggestions.length < 1) {
+    if (!showList || matched.length < 1) {
       return null; // Nothing to render
     }
 
     return (
       <ul className="suggestions">
-        {matchedSuggestions.map((item, index) => (
+        {matched.map((item, index) => (
           <li
             key={`item-${item}-${index}`}
             className={index === selectedIndex ? 'selected' : ''}

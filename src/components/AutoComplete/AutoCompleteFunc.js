@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { replaceAll } from '../utils';
-import '../style.css';
+import { replaceAll } from './utils';
+import './style.css';
 
 /**
  * Renders the text Input with autocomplete suggestions in the DropDown List
@@ -123,9 +123,7 @@ const AutoCompleteFunc = (props) => {
 
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
   function renderHighlightedText(text, subSting) {
-    const replaceWith = `<span class="highlight">${subSting}</span>`;
-    const result = replaceAll(text, subSting, replaceWith);
-    return result;
+    return replaceAll(text, subSting, `<span class="highlight">${subSting}</span>`);
   }
 
   // Renders a list of currently matched Suggestions
