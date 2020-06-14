@@ -121,6 +121,11 @@ const AutoCompleteFunc = (props) => {
     }
   };
 
+  // Hide the DropDown list when the input field loosing focus
+  const handleOnBlur = (event) => {
+    setShowList(false);
+  };
+
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
   function renderHighlightedText(text, subSting) {
     return replaceAll(text, subSting, `<span class="highlight">${subSting}</span>`);
@@ -148,7 +153,14 @@ const AutoCompleteFunc = (props) => {
 
   return (
     <div className="autocomplete">
-      <input className="value" type="text" value={value} onChange={handleOnChange} onKeyDown={handleKeyDown} />
+      <input
+        className="value"
+        type="text"
+        value={value}
+        onChange={handleOnChange}
+        onKeyDown={handleKeyDown}
+        onBlur={handleOnBlur}
+      />
       {renderSuggestions()}
     </div>
   );

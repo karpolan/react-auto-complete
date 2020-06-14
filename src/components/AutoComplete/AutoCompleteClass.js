@@ -144,6 +144,11 @@ class AutoCompleteClass extends Component {
     this.setState({ value: newValue, showList: false });
   };
 
+  // Hide the DropDown list when the input field loosing focus
+  handleOnBlur = (event) => {
+    this.setState({ showList: false });
+  };
+
   // Renders given Text by replacing all subSting occurrences with <span class="highlight">subSting</span>
   renderHighlightedText(text, subSting) {
     const replaceWith = `<span class="highlight">${subSting}</span>`;
@@ -183,6 +188,7 @@ class AutoCompleteClass extends Component {
           value={value}
           onChange={this.handleOnChange}
           onKeyDown={this.handleKeyDown}
+          onBlur={this.handleOnBlur}
         />
         {this.renderSuggestions()}
       </div>
