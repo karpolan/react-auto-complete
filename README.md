@@ -3,7 +3,13 @@
 There are two versions of the auto-complete component:
 
 - **AutoCompleteClass** - React.Component class descendant
-- **AutoCompleteFunc** - function with hooks
+- **AutoCompleteFunc** - function component with hooks
+
+Also there is Data controlled version:
+
+- **AutoCompleteDataController** - Wrapper for AutoComplete component to fetch data from API on the fly
+
+Live online demo at: https://react-auto-complete.netlify.app/
 
 ## Available Scripts
 

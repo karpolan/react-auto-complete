@@ -1,7 +1,13 @@
 {
   "name": "react-auto-complete",
-  "version": "0.3.9",
+  "version": "0.5.11",
+  "description": "AutoComplete Component for ReactJS without any additional libraries",
   "private": true,
+  "author": "Anton Karpenko <i@karpolan.com> (https://karpolan.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karpolan/react-auto-complete"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",

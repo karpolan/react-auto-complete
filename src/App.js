@@ -30,7 +30,7 @@ function App() {
       <footer>
         <p>
           Source code on{' '}
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/karpolan">
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/karpolan/react-auto-complete">
             GitHub
           </a>
         </p>
