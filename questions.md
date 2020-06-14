@@ -1,11 +1,11 @@
 1. _What is the difference between Component and PureComponent? give an
    example where it might break my app._
 
-PureComponent implements `shouldComponentUpdate()` and performs comparison on state and props values.
+PureComponent implements `shouldComponentUpdate()` and performs comparison of state and props values.
 
-_Example of problem:_ If you pass props values into PureComponent it may not be rendered
+_Example of problem:_ If you pass props values into PureComponent it may not be re-rendered
 
-_Example of problem:_ If you put non-pure component as a child of Pure component the child will not be re-rendered even on state changes
+_Example of problem:_ If you put non-pure component as a child of PureComponent the child will not be re-rendered even on state changes
 
 P.S. PureComponent is outdated technology. Function components with memoizing is better :)
 
@@ -13,9 +13,9 @@ P.S. PureComponent is outdated technology. Function components with memoizing is
    why is that?_
 
 - `Context` is global state API since 16.3 or even earlier.
-- `shouldComponentUpdate()` is component life cycle method that almost nobody use :)
+- `shouldComponentUpdate()` is a component life-cycle method that almost nobody use :)
 
-Don't see any "dangerous" if correctly use providers/consumers. Using of "correct" context (it is nearest by default) is a mast.
+Don't see any "dangerous" if correctly use providers/consumers. Using of "correct" context (it is nearest by default) is a must.
 
 3. _Describe 3 ways to pass information from a component to its PARENT._
 
@@ -27,7 +27,7 @@ Note: Observers, global variables, browser store(s) and other "simple" methodolo
 
 4. _Give 2 ways to prevent components from re-rendering._
 
-- `shouldComponentUpdate()` returns false (actually PureComponent works the same way)
+- `shouldComponentUpdate()` returns false (actually PureComponent works this way)
 - Change state directly, without using `setState()`, it is not recommended, but works :)
 
 5.  _What is a fragment and why do we need it? Give an example where it
@@ -59,7 +59,7 @@ Note: Better use only 1 hoc per line or `compose()`
 7.  _What's the difference in handling exceptions in promises, callbacks and
     async...await._
 
-- Promises "eats" exceptions by providing own `.catch()`
+- Promise "eats" exceptions by providing own `.catch()`
 - Callback sometimes executed outside the `try..except` block, so additional internal `try..except` could be required
 - `async...await` is a sugar syntax around Promises, but only this syntax allows write C#/Java styled "bulletproof business logic"
 
@@ -93,7 +93,7 @@ Note: `setState()` is not really "async", the React has own "scheduler" to updat
 
 - Don't do it if possible :)
 - Never do it if any logic depends on prev/next values of props/state (function components has access to current props/state only)
-- Create `[field, setField] = useState(prop.value || defaultValue)` for every filed in the state
+- Create `[field, setField] = useState(prop.value || defaultValue)` for every field in the state
 - Replace life-cycle methods with `useEffects()`, `useCallback()` and so on
 - If `defaultProps` are used, put them into props destruction `const { prop1 = defaultProp1, prop1 = defaultProp2 } = props`
 - Add `const` for every `handleXyz = (event) => {..}` :)
