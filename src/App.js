@@ -15,7 +15,7 @@ function App() {
         <h2>AutoCompleteClass</h2>
         <AutoCompleteClass suggestions={['apple', 'banana', 'coconut', 'banana']} />
         <h2>AutoCompleteFunc</h2>
-        <AutoCompleteFunc />
+        <AutoCompleteFunc suggestions={['apple', 'banana', 'coconut', 'banana']} />
 
         <h2>AutoCompleteWithDataFetch</h2>
         <AutoCompleteWithDataFetch debounceInterval={500} />

@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { replaceAll } from '../utils';
 import '../style.css';
-
-// Todo: Replace with optimized function from some popular library
-function replaceAll(str, find, replace) {
-  let result = str;
-  try {
-    result = str.replace(new RegExp(find, 'g'), replace);
-  } catch (error) {
-    result = str; // For text with ~\./ symbols RegExp may generate the exception
-  }
-  return result;
-}
 
 /**
  * Renders the text Input with autocomplete suggestions in the DropDown List
  * @param {string} props.value - input value as string
  * @param {array} props.suggestions - list of autocomplete suggestions as strings
- * @param {func} props.onChange - event callback, called as onChange(value:) on every key/char input
+ * @param {func} props.onChange - event callback, called as onChange(value) on every char input
  * @author Anton Karpenko
  */
 class AutoCompleteClass extends Component {
@@ -27,7 +17,7 @@ class AutoCompleteClass extends Component {
       value: props.value, // Current input value
       matchedSuggestions: [], // Filtered props.suggestions according to current input value
       showDropDown: false, // the DropDown list with matchedSuggestions is rendered when true
-      selectedIndex: -1, // Index of currently selected Suggestions in the DropDown list
+      selectedIndex: -1, // Index of currently selected Suggestion in the DropDown list
     };
   }
 
@@ -43,7 +33,7 @@ class AutoCompleteClass extends Component {
   }
 
   // Filters Suggestions according to current input value
-  filterSuggestion = (item, index, all) => {
+  filterSuggestion = (item = '', index, all) => {
     const { value } = this.state;
     if (!value) {
       return true; // When value is empty all Suggestions match
@@ -59,13 +49,15 @@ class AutoCompleteClass extends Component {
     this.setState({ matchedSuggestions, selectedIndex: -1 });
   }
 
-  // Calls props.onChange() if set
+  // Calls props.onChange() if set, also updates matchedSuggestions
   doOnChange() {
     const { onChange } = this.props;
     const { value } = this.state;
     if (onChange && typeof onChange === 'function') {
       onChange(value);
     }
+
+    this.updateSuggestions();
   }
 
   // Called on every Char the User enters
@@ -77,7 +69,6 @@ class AutoCompleteClass extends Component {
       return; // Nothing was changed...
     }
 
-    this.updateSuggestions();
     this.setState(
       {
         value: newValue,
@@ -89,7 +80,7 @@ class AutoCompleteClass extends Component {
 
   // Tracks Esc, Enter, Tab, Space and Arrow keys
   handleKeyDown = (event) => {
-    const { matchedSuggestions, showDropDown: showDropDown, selectedIndex } = this.state;
+    const { matchedSuggestions, showDropDown, selectedIndex } = this.state;
     let newSelectedIndex = selectedIndex;
 
     switch (event.keyCode) {
@@ -104,7 +95,7 @@ class AutoCompleteClass extends Component {
           this.setState({ showDropDown: true });
           return;
         }
-      // No break here!!!
+      // Note: No break here!!!
 
       case 9: // Tab pressed
       case 32: // Space pressed
@@ -165,9 +156,9 @@ class AutoCompleteClass extends Component {
     return result;
   }
 
-  // Renders a list of currently matched suggestions
+  // Renders a list of currently matched Suggestions
   renderSuggestions() {
-    const { value, matchedSuggestions, showDropDown: showDropDown, selectedIndex } = this.state;
+    const { value, matchedSuggestions, showDropDown, selectedIndex } = this.state;
 
     if (!showDropDown || matchedSuggestions.length < 1) {
       return null; // Nothing to render
